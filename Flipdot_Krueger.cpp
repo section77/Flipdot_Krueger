@@ -20,6 +20,7 @@ const uint8_t COLUMN_BIT_PINS[] = {COLUMN_1, COLUMN_2, COLUMN_3, COLUMN_4};
 const uint8_t ROW_BIT_PINS[] = {ROW_1, ROW_2, ROW_3, ROW_4};
 const uint8_t MATRIX_HEIGHT = 16;
 const uint8_t MODULE_WIDTH = 16;
+const uint8_t MATRIX_WIDTH = sizeof(MODULE_PINS) * MODULE_WIDTH;
 
 const int FLIP_PULSE_WIDTH_IN_MYS = 500;
 const int PAUSE_BETWEEN_DOT_FLIPS_IN_MS = 0;
@@ -53,7 +54,7 @@ Flipdot_Krueger::Flipdot_Krueger() {
 }
 
 void Flipdot_Krueger::flipToBlack(uint8_t x, uint8_t y) {
-  if (x < 0 || x > sizeof(MODULE_PINS)*MODULE_WIDTH) {
+  if (x < 0 || x > MATRIX_WIDTH) {
     return;
   }
 
@@ -62,11 +63,14 @@ void Flipdot_Krueger::flipToBlack(uint8_t x, uint8_t y) {
   }
 
   uint8_t moduleIndex = x / 16;
-  flipDot(moduleIndex, y, x, false);
+  uint8_t rowIndex = (MATRIX_HEIGHT - 1) - y;
+  uint8_t columnIndex = (MATRIX_WIDTH - 1) - x;
+
+  flipDot(moduleIndex, rowIndex, columnIndex, false);
 }
 
 void Flipdot_Krueger::flipToColor(uint8_t x, uint8_t y) {
-  if (x < 0 || x > sizeof(MODULE_PINS)*MODULE_WIDTH) {
+  if (x < 0 || x > MATRIX_WIDTH) {
     return;
   }
 
@@ -75,7 +79,10 @@ void Flipdot_Krueger::flipToColor(uint8_t x, uint8_t y) {
   }
 
   uint8_t moduleIndex = x / 16;
-  flipDot(moduleIndex, y, x, true);
+  uint8_t rowIndex = (MATRIX_HEIGHT - 1) - y;
+  uint8_t columnIndex = (MATRIX_WIDTH - 1) - x;
+
+  flipDot(moduleIndex, rowIndex, columnIndex, true);
 }
 
 void Flipdot_Krueger::flipDot(uint8_t moduleIndex, uint8_t rowIndex, uint8_t columnIndex, boolean shouldShowYellow) {
