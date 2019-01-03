@@ -53,12 +53,20 @@ Flipdot_Krueger::Flipdot_Krueger() {
   digitalWrite(ENABLE, LOW);
 }
 
-void Flipdot_Krueger::flipToBlack(uint8_t x, uint8_t y) {
-  if (x < 0 || x > MATRIX_WIDTH) {
-    return;
+bool Flipdot_Krueger::isPointInRange(uint8_t x, uint8_t y) {
+  if (x < 0 || x >= MATRIX_WIDTH) {
+    return false;
   }
 
-  if (y < 0 || y > MATRIX_HEIGHT) {
+  if (y < 0 || y >= MATRIX_HEIGHT) {
+    return false;
+  }
+
+  return true;
+}
+
+void Flipdot_Krueger::flipToBlack(uint8_t x, uint8_t y) {
+  if (!isPointInRange(x, y)) {
     return;
   }
 
@@ -70,11 +78,7 @@ void Flipdot_Krueger::flipToBlack(uint8_t x, uint8_t y) {
 }
 
 void Flipdot_Krueger::flipToColor(uint8_t x, uint8_t y) {
-  if (x < 0 || x > MATRIX_WIDTH) {
-    return;
-  }
-
-  if (y < 0 || y > MATRIX_HEIGHT) {
+  if (!isPointInRange(x, y)) {
     return;
   }
 
